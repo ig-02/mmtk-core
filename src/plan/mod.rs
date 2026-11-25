@@ -54,6 +54,7 @@ mod nogc;
 mod old_pass;
 mod one_pass;
 mod pageprotect;
+mod parallel_ibm_mc;
 mod semispace;
 
 pub(crate) use generational::global::is_nursery_gc;
@@ -70,5 +71,6 @@ pub use markcompact::MARKCOMPACT_CONSTRAINTS;
 pub use marksweep::MS_CONSTRAINTS;
 pub use nogc::NOGC_CONSTRAINTS;
 pub use pageprotect::PP_CONSTRAINTS;
+pub use parallel_ibm_mc::PARALLEL_IBM_MC_CONSTRAINTS;
 pub use semispace::SS_CONSTRAINTS;
 pub use sticky::immix::STICKY_IMMIX_CONSTRAINTS;

@@ -30,6 +30,7 @@ pub fn test_allocator_info() {
                 | PlanSelector::MarkCompact
                 | PlanSelector::Compressor
                 | PlanSelector::IBMMC
+                | PlanSelector::ParallelIBMMC
                 | PlanSelector::ConcurrentImmix
                 | PlanSelector::StickyImmix => {
                     // These plans all use bump pointer allocator.

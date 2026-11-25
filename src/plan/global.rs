@@ -69,6 +69,9 @@ pub fn create_mutator<VM: VMBinding>(
         PlanSelector::OnePass => crate::plan::one_pass::mutator::create_onepass_mutator(tls, mmtk),
         PlanSelector::OldPass => crate::plan::old_pass::mutator::create_oldpass_mutator(tls, mmtk),
         PlanSelector::IBMMC => crate::plan::ibm_mc::mutator::create_ibmmc_mutator(tls, mmtk),
+        PlanSelector::ParallelIBMMC => {
+            crate::plan::parallel_ibm_mc::mutator::create_parallel_ibmmc_mutator(tls, mmtk)
+        }
     })
 }
 
@@ -117,6 +120,10 @@ pub fn create_plan<VM: VMBinding>(
         }
         PlanSelector::IBMMC => {
             Box::new(crate::plan::ibm_mc::IBMMC::new(args)) as Box<dyn Plan<VM = VM>>
+        }
+        PlanSelector::ParallelIBMMC => {
+            Box::new(crate::plan::parallel_ibm_mc::ParallelIBMMC::new(args))
+                as Box<dyn Plan<VM = VM>>
         }
     };
 

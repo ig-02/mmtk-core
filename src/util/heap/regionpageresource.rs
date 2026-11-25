@@ -164,6 +164,32 @@ impl<VM: VMBinding, R: Region + 'static> RegionPageResource<VM, R> {
         alloc.set_cursor(new);
     }
 
+    /// Reset the allocation cursors across all regions after cross-region compaction.
+    ///
+    /// Unlike [`Self::reset_cursor`], an individual region's post-compaction cursor may
+    /// exceed its pre-compaction cursor when objects are moved into it from higher regions.
+    pub fn reset_cursors(&self, new_tops: &[Address]) {
+        let sync = self.sync.read().unwrap();
+        assert_eq!(sync.all_regions.len(), new_tops.len());
+        let mut total_old_pages = 0usize;
+        let mut total_new_pages = 0usize;
+        for (alloc, &top) in sync.all_regions.iter().zip(new_tops.iter()) {
+            let old = alloc.cursor();
+            let new = top.align_up(BYTES_IN_PAGE);
+            debug_assert!(new >= alloc.region.start() && new <= alloc.region.end());
+            total_old_pages += (old - alloc.region.start()) / BYTES_IN_PAGE;
+            total_new_pages += (new - alloc.region.start()) / BYTES_IN_PAGE;
+            alloc.set_cursor(new);
+        }
+        if total_old_pages >= total_new_pages {
+            self.common().accounting.release(total_old_pages - total_new_pages);
+        } else {
+            self.common()
+                .accounting
+                .reserve_and_commit(total_new_pages - total_old_pages);
+        }
+    }
+
     /// Reset the allocator state after a collection, so that the allocator will
     /// revisit regions which the garbage collector has compacted.
     pub fn reset_allocator(&self) {

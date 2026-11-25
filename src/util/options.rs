@@ -57,6 +57,9 @@ pub enum PlanSelector {
     /// A single-threaded mark-compact collector implementing the IBM MC algorithm
     /// (Abuaiadh et al., OOPSLA '04).
     IBMMC,
+    /// A parallel mark-compact collector implementing the IBM MC algorithm
+    /// (Abuaiadh et al., OOPSLA '04).
+    ParallelIBMMC,
     /// An Immix collector that uses a sticky mark bit to allow generational behaviors without a copying nursery.
     StickyImmix,
     /// Concurrent non-moving immix using SATB

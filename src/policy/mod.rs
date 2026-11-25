@@ -24,6 +24,7 @@ pub mod sft_map;
 pub mod compressor;
 pub mod copyspace;
 pub mod ibm_mc;
+pub mod parallel_ibm_mc;
 pub mod immix;
 pub mod immortalspace;
 pub mod largeobjectspace;
